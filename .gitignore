@@ -1,0 +1,27 @@
+## Build artifacts
+bin/
+obj/
+
+## NuGet
+*.nupkg
+*.snupkg
+project.assets.json
+project.nuget.cache
+*.nuget.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+
+## Visual Studio
+*.user
+.vs/
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Database files
+*.db
+*.db-shm
+*.db-wal
+
+## Temporary files
+/tmp/

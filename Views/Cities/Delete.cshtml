@@ -1,0 +1,30 @@
+@model WeatherApp.Models.City
+
+@{
+    ViewData["Title"] = "Delete City";
+}
+
+<h2>🗑️ Delete City</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="alert alert-danger">
+            <h4>⚠️ Confirm Deletion</h4>
+            <p>Are you sure you want to delete this city and all its weather records?</p>
+        </div>
+        <dl class="row">
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+            <dt class="col-sm-3">Country</dt>
+            <dd class="col-sm-9">@Model.Country</dd>
+        </dl>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

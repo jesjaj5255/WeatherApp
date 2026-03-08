@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>📊 Admin Dashboard</h2>
+<hr />
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body text-center">
+                <h3>@ViewBag.TotalUsers</h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body text-center">
+                <h3>@ViewBag.TotalCities</h3>
+                <p>Cities</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body text-center">
+                <h3>@ViewBag.TotalWeatherData</h3>
+                <p>Weather Records</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><strong>👥 User Management</strong></div>
+            <div class="card-body">
+                <p>Admins: @ViewBag.TotalAdmins | Regular Users: @ViewBag.TotalRegularUsers</p>
+                <a asp-action="Users" class="btn btn-primary">Manage Users</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><strong>🏙️ Data Management</strong></div>
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <a asp-controller="Cities" asp-action="Index" class="btn btn-outline-primary">Cities</a>
+                    <a asp-controller="Cities" asp-action="Create" class="btn btn-success">➕ Add City</a>
+                    <a asp-controller="WeatherData" asp-action="Create" class="btn btn-info">➕ Add Weather</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

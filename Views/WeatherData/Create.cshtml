@@ -1,0 +1,57 @@
+@model WeatherApp.Models.WeatherData
+
+@{
+    ViewData["Title"] = "Add Weather Record";
+}
+
+<h2>➕ Add Weather Record</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="CityId" class="form-label"></label>
+                <select asp-for="CityId" asp-items="ViewBag.CityId" class="form-select">
+                    <option value="">-- Select City --</option>
+                </select>
+                <span asp-validation-for="CityId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Date" class="form-label"></label>
+                <input asp-for="Date" type="datetime-local" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Temperature" class="form-label"></label>
+                    <input asp-for="Temperature" class="form-control" step="0.1" />
+                    <span asp-validation-for="Temperature" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Humidity" class="form-label"></label>
+                    <input asp-for="Humidity" class="form-control" type="number" />
+                    <span asp-validation-for="Humidity" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="WindSpeed" class="form-label"></label>
+                    <input asp-for="WindSpeed" class="form-control" step="0.1" />
+                    <span asp-validation-for="WindSpeed" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

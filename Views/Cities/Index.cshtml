@@ -1,0 +1,44 @@
+@model IEnumerable<WeatherApp.Models.City>
+
+@{
+    ViewData["Title"] = "Cities";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📍 Cities</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">➕ Add City</a>
+    }
+</div>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var city in Model)
+        {
+            <tr>
+                <td>@city.Name</td>
+                <td>@city.Country</td>
+                <td>@city.Latitude</td>
+                <td>@city.Longitude</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@city.Id" class="btn btn-sm btn-info">Details</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@city.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@city.Id" class="btn btn-sm btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
