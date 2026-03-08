@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "О приложении";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="hero-banner mb-4" style="padding: 2.5rem 2rem;">
+            <div style="font-size:3.5rem; margin-bottom:0.75rem;">ℹ️</div>
+            <h1 class="h2 fw-bold">О приложении WeatherApp</h1>
+            <p class="mb-0">Система мониторинга погоды — учебный проект ASP.NET Core MVC</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">🎯 Цель приложения</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>WeatherApp</strong> — это веб-приложение для мониторинга и хранения данных о погоде
+                    по городам мира. Приложение разработано в рамках учебного курса по ASP.NET Core MVC.
+                </p>
+                <p class="mb-0">
+                    Система позволяет хранить информацию о городах, записывать показатели погоды (температура,
+                    влажность, скорость ветра) и управлять доступом пользователей через ролевую модель.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">⚙️ Технологии</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">🔷</span>
+                            <div>
+                                <strong>.NET 8.0 / ASP.NET Core MVC</strong>
+                                <div class="small text-muted">Основной фреймворк</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">🎨</span>
+                            <div>
+                                <strong>Bootstrap 5.3</strong>
+                                <div class="small text-muted">UI-фреймворк (CDN)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">🗄️</span>
+                            <div>
+                                <strong>Entity Framework Core 8</strong>
+                                <div class="small text-muted">ORM + SQL Server</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">🔐</span>
+                            <div>
+                                <strong>ASP.NET Core Identity</strong>
+                                <div class="small text-muted">Аутентификация и роли</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">💾</span>
+                            <div>
+                                <strong>IMemoryCache</strong>
+                                <div class="small text-muted">Кэширование списков</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start">
+                            <span class="me-2 mt-1">🍪</span>
+                            <div>
+                                <strong>Sessions &amp; Cookies</strong>
+                                <div class="small text-muted">Состояние сессий</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">👥 Роли пользователей</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-4 text-center">
+                        <div class="role-card">
+                            <div class="role-icon">👑</div>
+                            <h6 class="fw-bold text-danger">Admin</h6>
+                            <small class="text-muted">Полный доступ ко всем функциям системы</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <div class="role-card">
+                            <div class="role-icon">🛠️</div>
+                            <h6 class="fw-bold text-warning">Manager</h6>
+                            <small class="text-muted">Управление данными о погоде</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <div class="role-card">
+                            <div class="role-icon">👤</div>
+                            <h6 class="fw-bold text-primary">User</h6>
+                            <small class="text-muted">Просмотр данных</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <a asp-controller="Home" asp-action="Specification" class="btn btn-outline-primary me-2">
+                📋 Техническое задание
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                🏠 На главную
+            </a>
+        </div>
+    </div>
+</div>

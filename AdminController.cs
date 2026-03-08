@@ -113,6 +113,13 @@ namespace WeatherApp.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        // GET: Admin/Roles
+        public async Task<IActionResult> Roles()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            return View(roles);
+        }
+
         // GET: Admin/DeleteUser
         public async Task<IActionResult> DeleteUser(string id)
         {

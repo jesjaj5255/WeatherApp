@@ -1,0 +1,44 @@
+@model WeatherApp.Models.WeatherData
+@{
+    ViewData["Title"] = "Удалить данные о погоде";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="page-title text-danger">🗑️ Удалить данные о погоде</h1>
+
+        <div class="card shadow-custom mb-4">
+            <div class="card-header" style="background: linear-gradient(135deg,#C62828,#D32F2F);">
+                <h5 class="mb-0">⚠️ Подтверждение удаления</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-danger fw-bold mb-3">
+                    Вы уверены, что хотите удалить эту запись о погоде?
+                </p>
+                <dl class="row">
+                    <dt class="col-sm-4">Город:</dt>
+                    <dd class="col-sm-8"><strong>@(Model.City?.Name ?? "—")</strong></dd>
+                    <dt class="col-sm-4">Температура:</dt>
+                    <dd class="col-sm-8">@Model.Temperature°C</dd>
+                    <dt class="col-sm-4">Влажность:</dt>
+                    <dd class="col-sm-8">@Model.Humidity%</dd>
+                    <dt class="col-sm-4">Ветер:</dt>
+                    <dd class="col-sm-8">@Model.WindSpeed км/ч</dd>
+                    <dt class="col-sm-4">Описание:</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
+                    <dt class="col-sm-4">Дата:</dt>
+                    <dd class="col-sm-8">@Model.Date.ToString("dd.MM.yyyy HH:mm")</dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex gap-2">
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn btn-danger">🗑️ Да, удалить</button>
+                    </form>
+                    <a asp-action="Index" class="btn btn-outline-secondary">← Отмена</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

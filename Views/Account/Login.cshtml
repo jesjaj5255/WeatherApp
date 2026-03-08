@@ -1,0 +1,67 @@
+@model WeatherApp.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <div style="font-size:3rem; margin-bottom:0.5rem;">🔐</div>
+            <h2>Вход в систему</h2>
+            <p class="mb-0 small" style="color:rgba(255,255,255,0.75);">WeatherApp — Мониторинг погоды</p>
+        </div>
+        <div class="auth-card-body">
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                @if (ViewData["ReturnUrl"] != null)
+                {
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                }
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">📧 Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="your@email.com"
+                           autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">🔑 Пароль</label>
+                    <input asp-for="Password" class="form-control" placeholder="Введите пароль"
+                           autocomplete="current-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">Запомнить меня</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    🔐 Войти
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    Нет аккаунта?
+                    <a asp-action="Register" class="fw-semibold">Зарегистрируйтесь</a>
+                </small>
+            </div>
+
+            <!-- Demo Info Box -->
+            <div class="demo-info-box mt-3">
+                <div class="fw-bold mb-2">🛈 Тестовый аккаунт администратора:</div>
+                <div><span class="text-muted">Email:</span> <code>admin@weatherapp.com</code></div>
+                <div><span class="text-muted">Пароль:</span> <code>Admin123!</code></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

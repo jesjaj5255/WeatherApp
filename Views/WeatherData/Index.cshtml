@@ -1,0 +1,79 @@
+@model IEnumerable<WeatherApp.Models.WeatherData>
+@{
+    ViewData["Title"] = "Данные о погоде";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">🌦️ Данные о погоде</h1>
+    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+    {
+        <a asp-action="Create" class="btn btn-success">➕ Добавить запись</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-4">
+        <div style="font-size:3rem;">🌤️</div>
+        <h5 class="mt-2">Нет данных о погоде</h5>
+        <p class="mb-0 text-muted">Записей о погоде пока не существует.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>🏙️ Город</th>
+                    <th>🌡️ Температура</th>
+                    <th>💧 Влажность</th>
+                    <th>💨 Ветер</th>
+                    <th>📝 Описание</th>
+                    <th>📅 Дата</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">
+                            <a asp-controller="Cities" asp-action="Details" asp-route-id="@item.CityId"
+                               class="text-decoration-none">
+                                🏙️ @(item.City?.Name ?? "—")
+                            </a>
+                        </td>
+                        <td>
+                            <strong class="@(item.Temperature < 0 ? "text-info" : item.Temperature > 25 ? "text-danger" : "text-success")">
+                                @item.Temperature°C
+                            </strong>
+                        </td>
+                        <td>@item.Humidity%</td>
+                        <td>@item.WindSpeed км/ч</td>
+                        <td class="small text-muted" style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            @item.Description
+                        </td>
+                        <td class="small">@item.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-outline-primary">🔍</a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-outline-secondary">✏️</a>
+                                }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-outline-danger">🗑️</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

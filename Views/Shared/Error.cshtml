@@ -1,0 +1,23 @@
+@model WeatherApp.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Ошибка";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="error-container">
+            <div class="error-icon mb-4">💥</div>
+            <h1 class="display-4 text-danger fw-bold">Ошибка!</h1>
+            <p class="lead text-muted mb-4">Произошла непредвиденная ошибка при обработке запроса.</p>
+            @if (Model?.ShowRequestId ?? false)
+            {
+                <div class="alert alert-secondary">
+                    <small>ID запроса: <code>@Model.RequestId</code></small>
+                </div>
+            }
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                🏠 Вернуться на главную
+            </a>
+        </div>
+    </div>
+</div>
