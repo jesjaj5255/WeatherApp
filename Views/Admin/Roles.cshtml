@@ -64,7 +64,7 @@
                     <p class="text-muted small">Пользовательская роль.</p>
                 }
                 <div class="mt-2">
-                    <span class="badge bg-secondary small">ID: @(role.Id.Length > 8 ? role.Id[..8] : role.Id)...</span>
+                    <span class="badge bg-secondary small">ID: @(role.Id.Length >= 8 ? role.Id[..8] : role.Id)...</span>
                 </div>
             </div>
         </div>
