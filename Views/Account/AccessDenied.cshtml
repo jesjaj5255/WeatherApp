@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Доступ запрещён";
+}
+
+<div class="access-denied-container">
+    <div class="access-denied-icon">🚫</div>
+    <h1 class="display-4 text-danger fw-bold">Доступ запрещён</h1>
+    <p class="lead text-muted mb-4">
+        У вас недостаточно прав для просмотра этой страницы.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+            🏠 На главную
+        </a>
+        @if (!User.Identity!.IsAuthenticated)
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">
+                🔐 Войти
+            </a>
+        }
+    </div>
+</div>

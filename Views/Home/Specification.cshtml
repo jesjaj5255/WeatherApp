@@ -1,0 +1,226 @@
+@{
+    ViewData["Title"] = "Техническое задание";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="hero-banner mb-4" style="padding: 2rem 2rem;">
+            <div style="font-size:3rem; margin-bottom:0.5rem;">📋</div>
+            <h1 class="h2 fw-bold">Техническое задание</h1>
+            <p class="mb-0">Система мониторинга погоды — WeatherApp</p>
+        </div>
+
+        <!-- 1. Общее описание -->
+        <div class="spec-section">
+            <h3>1. Общее описание проекта</h3>
+            <p>
+                <strong>WeatherApp</strong> — веб-приложение ASP.NET Core MVC для хранения и просмотра
+                метеорологических данных по городам. Поддерживает ролевую систему доступа и полный CRUD
+                для всех сущностей.
+            </p>
+            <ul>
+                <li>Язык интерфейса: русский</li>
+                <li>Фреймворк: ASP.NET Core 8.0 MVC</li>
+                <li>База данных: Microsoft SQL Server + Entity Framework Core 8</li>
+                <li>Аутентификация: ASP.NET Core Identity</li>
+                <li>UI: Bootstrap 5.3 (CDN)</li>
+            </ul>
+        </div>
+
+        <!-- 2. Страницы -->
+        <div class="spec-section">
+            <h3>2. Страницы и функциональность</h3>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Страница</th>
+                            <th>Доступ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>/</td><td>Главная (список городов)</td><td>Все</td></tr>
+                        <tr><td>/Home/About</td><td>О приложении</td><td>Все</td></tr>
+                        <tr><td>/Home/Privacy</td><td>Политика конф.</td><td>Все</td></tr>
+                        <tr><td>/Home/Specification</td><td>Техническое задание</td><td>Все</td></tr>
+                        <tr><td>/Cities</td><td>Список городов</td><td>Все</td></tr>
+                        <tr><td>/Cities/Details/{id}</td><td>Детали города + история погоды</td><td>Все</td></tr>
+                        <tr><td>/Cities/Create</td><td>Создание города</td><td>Admin</td></tr>
+                        <tr><td>/Cities/Edit/{id}</td><td>Редактирование города</td><td>Admin</td></tr>
+                        <tr><td>/Cities/Delete/{id}</td><td>Удаление города</td><td>Admin</td></tr>
+                        <tr><td>/WeatherData</td><td>Все данные о погоде</td><td>Все</td></tr>
+                        <tr><td>/WeatherData/Details/{id}</td><td>Детали записи погоды</td><td>Все</td></tr>
+                        <tr><td>/WeatherData/Create</td><td>Добавление данных</td><td>Manager, Admin</td></tr>
+                        <tr><td>/WeatherData/Edit/{id}</td><td>Редактирование данных</td><td>Manager, Admin</td></tr>
+                        <tr><td>/WeatherData/Delete/{id}</td><td>Удаление данных</td><td>Admin</td></tr>
+                        <tr><td>/Account/Login</td><td>Вход в систему</td><td>Анонимные</td></tr>
+                        <tr><td>/Account/Register</td><td>Регистрация</td><td>Анонимные</td></tr>
+                        <tr><td>/Admin</td><td>Панель администратора</td><td>Admin</td></tr>
+                        <tr><td>/Admin/Users</td><td>Управление пользователями</td><td>Admin</td></tr>
+                        <tr><td>/Admin/Roles</td><td>Просмотр ролей</td><td>Admin</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Сущности -->
+        <div class="spec-section">
+            <h3>3. Сущности базы данных</h3>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header py-2">
+                            <strong>🏙️ City (Город)</strong>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            <ul class="list-unstyled small mb-0">
+                                <li><code>Id</code> — первичный ключ</li>
+                                <li><code>Name</code> — название (2–100 симв.)</li>
+                                <li><code>Country</code> — страна (2–100 симв.)</li>
+                                <li><code>Latitude</code> — широта (-90..90)</li>
+                                <li><code>Longitude</code> — долгота (-180..180)</li>
+                                <li><code>Description</code> — описание (до 500)</li>
+                                <li><code>CreatedDate</code> — дата создания</li>
+                                <li><code>WeatherHistory</code> — история погоды</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header py-2">
+                            <strong>🌦️ WeatherData (Погода)</strong>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            <ul class="list-unstyled small mb-0">
+                                <li><code>Id</code> — первичный ключ</li>
+                                <li><code>CityId</code> — FK → City</li>
+                                <li><code>Temperature</code> — темп. (-50..60°C)</li>
+                                <li><code>Humidity</code> — влажность (0–100%)</li>
+                                <li><code>WindSpeed</code> — ветер (0–100 км/ч)</li>
+                                <li><code>Description</code> — описание (3–200)</li>
+                                <li><code>Date</code> — дата и время</li>
+                                <li><code>City</code> — навигация</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header py-2">
+                            <strong>👤 User (Пользователь)</strong>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            <ul class="list-unstyled small mb-0">
+                                <li>Наследует <code>IdentityUser</code></li>
+                                <li><code>FullName</code> — полное имя (до 100)</li>
+                                <li><code>RegistrationDate</code> — дата регистрации</li>
+                                <li><code>FavoriteCities</code> — избранные города</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header py-2">
+                            <strong>⭐ UserWeatherFavorite</strong>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            <ul class="list-unstyled small mb-0">
+                                <li><code>Id</code> — первичный ключ</li>
+                                <li><code>UserId</code> — FK → User</li>
+                                <li><code>CityId</code> — FK → City</li>
+                                <li>Таблица избранных городов</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Роли -->
+        <div class="spec-section">
+            <h3>4. Роли и права доступа</h3>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Роль</th>
+                            <th>Просмотр</th>
+                            <th>Создание погоды</th>
+                            <th>Редактирование</th>
+                            <th>Удаление</th>
+                            <th>Управление пользов.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge role-badge-admin text-white">Admin</span></td>
+                            <td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge role-badge-manager text-white">Manager</span></td>
+                            <td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge role-badge-user text-white">User</span></td>
+                            <td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-secondary">Анонимный</span></td>
+                            <td>✅ (частично)</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Технические требования -->
+        <div class="spec-section">
+            <h3>5. Технические требования и ограничения</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Обязательные функции:</h6>
+                    <ul>
+                        <li>CRUD для городов и данных о погоде</li>
+                        <li>Аутентификация через ASP.NET Core Identity</li>
+                        <li>Ролевая модель доступа</li>
+                        <li>Кэширование с IMemoryCache</li>
+                        <li>Сессии (счётчик визитов)</li>
+                        <li>Cookie (последний визит)</li>
+                        <li>Query String фильтрация и сортировка</li>
+                        <li>Постраничная навигация</li>
+                        <li>Валидация форм (Data Annotations)</li>
+                        <li>Антифальсификационные токены</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Ограничения данных:</h6>
+                    <ul>
+                        <li>Название города: 2–100 символов</li>
+                        <li>Страна: 2–100 символов</li>
+                        <li>Широта: -90° до +90°</li>
+                        <li>Долгота: -180° до +180°</li>
+                        <li>Описание: до 500 символов</li>
+                        <li>Температура: -50°C до +60°C</li>
+                        <li>Влажность: 0–100%</li>
+                        <li>Скорость ветра: 0–100 км/ч</li>
+                        <li>Пароль: минимум 6 символов</li>
+                        <li>Полное имя: до 100 символов</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <a asp-controller="Home" asp-action="About" class="btn btn-outline-primary me-2">
+                ℹ️ О приложении
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                🏠 На главную
+            </a>
+        </div>
+    </div>
+</div>

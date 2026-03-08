@@ -1,0 +1,148 @@
+@model WeatherApp.Models.City
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Города</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <!-- City Info Card -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">🏙️ @Model.Name</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-5 text-muted">Страна:</dt>
+                    <dd class="col-7"><strong>@Model.Country</strong></dd>
+                    <dt class="col-5 text-muted">Широта:</dt>
+                    <dd class="col-7">@Model.Latitude°</dd>
+                    <dt class="col-5 text-muted">Долгота:</dt>
+                    <dd class="col-7">@Model.Longitude°</dd>
+                    <dt class="col-5 text-muted">Записей:</dt>
+                    <dd class="col-7">
+                        <span class="badge bg-primary">@Model.WeatherHistory.Count</span>
+                    </dd>
+                    <dt class="col-5 text-muted">Добавлен:</dt>
+                    <dd class="col-7 small">@Model.CreatedDate.ToString("dd.MM.yyyy")</dd>
+                </dl>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <hr />
+                    <p class="text-muted small mb-0">@Model.Description</p>
+                }
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex flex-column gap-2">
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a asp-controller="WeatherData" asp-action="Create"
+                           asp-route-cityId="@Model.Id" class="btn btn-success btn-sm">
+                            ➕ Добавить данные о погоде
+                        </a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
+                            ✏️ Редактировать город
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-outline-primary btn-sm">
+                        ← Назад к городам
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weather History -->
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">🌦️ История погоды</h4>
+            @if ((bool)(ViewBag.ShowChart ?? false))
+            {
+                <span class="badge bg-info">📊 Режим графика</span>
+            }
+            else
+            {
+                <a asp-action="Details" asp-route-id="@Model.Id" asp-route-chart="true"
+                   class="btn btn-outline-info btn-sm">
+                    📊 Показать график
+                </a>
+            }
+        </div>
+
+        @if (!Model.WeatherHistory.Any())
+        {
+            <div class="alert alert-info text-center py-4">
+                <div style="font-size:2.5rem;">🌤️</div>
+                <p class="mb-0">Данных о погоде пока нет.</p>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                    <a asp-controller="WeatherData" asp-action="Create" class="btn btn-primary btn-sm mt-2">
+                        Добавить первую запись
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>📅 Дата</th>
+                            <th>🌡️ Темп.</th>
+                            <th>💧 Влажн.</th>
+                            <th>💨 Ветер</th>
+                            <th>📝 Описание</th>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                            {
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var w in Model.WeatherHistory.OrderByDescending(x => x.Date))
+                        {
+                            <tr>
+                                <td class="small">@w.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td>
+                                    <strong class="@(w.Temperature < 0 ? "text-info" : w.Temperature > 25 ? "text-danger" : "text-success")">
+                                        @w.Temperature°C
+                                    </strong>
+                                </td>
+                                <td>@w.Humidity%</td>
+                                <td>@w.WindSpeed км/ч</td>
+                                <td class="small">@w.Description</td>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                {
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-controller="WeatherData" asp-action="Details" asp-route-id="@w.Id"
+                                               class="btn btn-outline-primary btn-sm">🔍</a>
+                                            <a asp-controller="WeatherData" asp-action="Edit" asp-route-id="@w.Id"
+                                               class="btn btn-outline-secondary btn-sm">✏️</a>
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <a asp-controller="WeatherData" asp-action="Delete" asp-route-id="@w.Id"
+                                                   class="btn btn-outline-danger btn-sm">🗑️</a>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

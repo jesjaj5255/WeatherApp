@@ -1,0 +1,74 @@
+@model WeatherApp.Models.User
+@{
+    ViewData["Title"] = "Редактировать пользователя";
+    var allRoles = ViewBag.AllRoles as List<Microsoft.AspNetCore.Identity.IdentityRole> ?? new();
+    var userRoles = ViewBag.UserRoles as IList<string> ?? new List<string>();
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="page-title">✏️ Редактировать пользователя</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">👤 Информация о пользователе</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+                    <dt class="col-sm-4">Полное имя:</dt>
+                    <dd class="col-sm-8">@(Model.FullName ?? "—")</dd>
+                    <dt class="col-sm-4">Регистрация:</dt>
+                    <dd class="col-sm-8">@Model.RegistrationDate.ToString("dd.MM.yyyy")</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <form asp-action="EditUser" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+
+                <h6 class="fw-bold mb-3">🔑 Роли пользователя</h6>
+
+                @if (!allRoles.Any())
+                {
+                    <p class="text-muted">Нет доступных ролей.</p>
+                }
+                else
+                {
+                    @foreach (var role in allRoles)
+                    {
+                        <div class="form-check mb-2">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   name="selectedRoles"
+                                   value="@role.Name"
+                                   id="role_@role.Id"
+                                   @(userRoles.Contains(role.Name!) ? "checked" : "") />
+                            <label class="form-check-label" for="role_@role.Id">
+                                @if (role.Name == "Admin")
+                                {
+                                    <span class="badge role-badge-admin text-white">👑 Admin</span>
+                                }
+                                else if (role.Name == "Manager")
+                                {
+                                    <span class="badge role-badge-manager text-white">🛠️ Manager</span>
+                                }
+                                else
+                                {
+                                    <span class="badge role-badge-user text-white">👤 @role.Name</span>
+                                }
+                            </label>
+                        </div>
+                    }
+                }
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">💾 Сохранить роли</button>
+                    <a asp-action="Users" class="btn btn-outline-secondary">← Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

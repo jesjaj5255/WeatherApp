@@ -1,0 +1,51 @@
+@model WeatherApp.Models.User
+@{
+    ViewData["Title"] = "Удалить пользователя";
+    var roles = ViewBag.Roles as IList<string> ?? new List<string>();
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="page-title text-danger">🗑️ Удалить пользователя</h1>
+
+        <div class="card shadow-custom mb-4">
+            <div class="card-header" style="background: linear-gradient(135deg,#C62828,#D32F2F);">
+                <h5 class="mb-0">⚠️ Подтверждение удаления</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-danger fw-bold mb-3">
+                    Вы уверены, что хотите удалить этого пользователя?
+                    Это действие нельзя отменить.
+                </p>
+                <dl class="row">
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8"><strong>@Model.Email</strong></dd>
+                    <dt class="col-sm-4">Полное имя:</dt>
+                    <dd class="col-sm-8">@(Model.FullName ?? "—")</dd>
+                    <dt class="col-sm-4">Регистрация:</dt>
+                    <dd class="col-sm-8">@Model.RegistrationDate.ToString("dd.MM.yyyy")</dd>
+                    <dt class="col-sm-4">Роли:</dt>
+                    <dd class="col-sm-8">
+                        @foreach (var role in roles)
+                        {
+                            <span class="badge bg-secondary me-1">@role</span>
+                        }
+                        @if (!roles.Any())
+                        {
+                            <span class="text-muted small">Нет ролей</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex gap-2">
+                    <form asp-action="DeleteUser" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">🗑️ Да, удалить</button>
+                    </form>
+                    <a asp-action="Users" class="btn btn-outline-secondary">← Отмена</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

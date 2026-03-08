@@ -1,0 +1,80 @@
+@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "Роли системы";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">🔑 Роли системы</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Панель управления</a>
+</div>
+
+<div class="row g-4">
+    @foreach (var role in Model)
+    {
+        <div class="col-md-4">
+            <div class="role-card">
+                @if (role.Name == "Admin")
+                {
+                    <div class="role-icon">👑</div>
+                    <h5 class="fw-bold text-danger">Admin</h5>
+                    <p class="text-muted small mb-3">
+                        Полный доступ ко всем функциям системы.
+                        Управление пользователями, ролями, городами и данными о погоде.
+                    </p>
+                    <ul class="list-unstyled small text-start text-muted">
+                        <li>✅ Создание/редактирование/удаление городов</li>
+                        <li>✅ Управление данными о погоде</li>
+                        <li>✅ Управление пользователями и ролями</li>
+                        <li>✅ Просмотр панели администратора</li>
+                    </ul>
+                }
+                else if (role.Name == "Manager")
+                {
+                    <div class="role-icon">🛠️</div>
+                    <h5 class="fw-bold text-warning">Manager</h5>
+                    <p class="text-muted small mb-3">
+                        Управление данными о погоде.
+                        Может добавлять и редактировать записи погоды, но не управляет пользователями.
+                    </p>
+                    <ul class="list-unstyled small text-start text-muted">
+                        <li>✅ Создание данных о погоде</li>
+                        <li>✅ Редактирование данных о погоде</li>
+                        <li>❌ Удаление данных (только Admin)</li>
+                        <li>❌ Управление пользователями</li>
+                    </ul>
+                }
+                else if (role.Name == "User")
+                {
+                    <div class="role-icon">👤</div>
+                    <h5 class="fw-bold text-primary">User</h5>
+                    <p class="text-muted small mb-3">
+                        Базовая роль для зарегистрированных пользователей.
+                        Только просмотр данных.
+                    </p>
+                    <ul class="list-unstyled small text-start text-muted">
+                        <li>✅ Просмотр городов и данных о погоде</li>
+                        <li>❌ Создание/редактирование/удаление</li>
+                        <li>❌ Доступ к панели администратора</li>
+                    </ul>
+                }
+                else
+                {
+                    <div class="role-icon">🔑</div>
+                    <h5 class="fw-bold">@role.Name</h5>
+                    <p class="text-muted small">Пользовательская роль.</p>
+                }
+                <div class="mt-2">
+                    <span class="badge bg-secondary small">ID: @role.Id[..8]...</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-4">
+        <h5>Роли не найдены</h5>
+        <p class="mb-0 text-muted">В системе нет настроенных ролей.</p>
+    </div>
+}

@@ -1,0 +1,104 @@
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">⚙️ Панель администратора</h1>
+    <span class="badge bg-danger fs-6 px-3 py-2">👑 Admin</span>
+</div>
+
+<!-- Stats Grid -->
+<div class="row g-4 mb-4">
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.TotalUsers</div>
+            <div class="stat-label">👥 Всего пользователей</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card admin">
+            <div class="stat-value">@ViewBag.TotalAdmins</div>
+            <div class="stat-label">👑 Администраторов</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card manager">
+            <div class="stat-value">@ViewBag.TotalManagers</div>
+            <div class="stat-label">🛠️ Менеджеров</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card user">
+            <div class="stat-value">@ViewBag.TotalRegularUsers</div>
+            <div class="stat-label">👤 Пользователей</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card cities">
+            <div class="stat-value">@ViewBag.TotalCities</div>
+            <div class="stat-label">🏙️ Городов</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card weather">
+            <div class="stat-value">@ViewBag.TotalWeatherData</div>
+            <div class="stat-label">🌦️ Данных о погоде</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">👥 Пользователи</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">Управление учётными записями пользователей: просмотр, редактирование ролей, удаление.</p>
+                <a asp-action="Users" class="btn btn-primary w-100">
+                    Управление пользователями →
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">🔑 Роли</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">Просмотр ролей системы: Admin, Manager, User и их описание.</p>
+                <a asp-action="Roles" class="btn btn-primary w-100">
+                    Просмотр ролей →
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">🏙️ Города</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">Управление городами: добавление, редактирование, удаление записей.</p>
+                <a asp-controller="Cities" asp-action="Index" class="btn btn-primary w-100">
+                    Управление городами →
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">🌦️ Погода</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">Просмотр и управление всеми данными о погоде в системе.</p>
+                <a asp-controller="WeatherData" asp-action="Index" class="btn btn-primary w-100">
+                    Данные о погоде →
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

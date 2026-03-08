@@ -1,0 +1,64 @@
+@model IEnumerable<WeatherApp.Models.City>
+@{
+    ViewData["Title"] = "Города";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">🏙️ Города</h1>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">
+            ➕ Добавить город
+        </a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-4">
+        <div style="font-size:3rem;">🏙️</div>
+        <h5 class="mt-2">Нет данных</h5>
+        <p class="mb-0 text-muted">В базе данных пока нет городов.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var city in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card city-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0 fw-bold">🏙️ @city.Name</h5>
+                            <span class="badge bg-primary">@city.Country</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(city.Description))
+                        {
+                            <p class="card-text text-muted small mb-2">@city.Description</p>
+                        }
+                        <p class="card-text small text-muted">
+                            📍 Широта: @city.Latitude° &nbsp;|&nbsp; Долгота: @city.Longitude°
+                        </p>
+                        <p class="card-text small text-muted">
+                            📅 Добавлен: @city.CreatedDate.ToString("dd.MM.yyyy")
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pt-0">
+                        <div class="btn-group w-100" role="group">
+                            <a asp-action="Details" asp-route-id="@city.Id"
+                               class="btn btn-outline-primary btn-sm">🔍 Детали</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@city.Id"
+                                   class="btn btn-outline-secondary btn-sm">✏️ Изменить</a>
+                                <a asp-action="Delete" asp-route-id="@city.Id"
+                                   class="btn btn-outline-danger btn-sm">🗑️ Удалить</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

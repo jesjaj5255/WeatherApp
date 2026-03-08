@@ -1,0 +1,164 @@
+@model IEnumerable<WeatherApp.Models.City>
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<!-- Hero Banner -->
+<div class="hero-banner">
+    <div class="position-relative">
+        <div style="font-size:4rem; margin-bottom:0.75rem;">🌤️</div>
+        <h1 class="display-5 fw-bold">Добро пожаловать в WeatherApp</h1>
+        <p class="lead">Система мониторинга погоды по городам мира. Актуальные данные, история наблюдений и удобный интерфейс.</p>
+        <a asp-controller="WeatherData" asp-action="Index" class="btn btn-light btn-lg mt-2 me-2">
+            🌦️ Смотреть погоду
+        </a>
+        <a asp-controller="Cities" asp-action="Index" class="btn btn-outline-light btn-lg mt-2">
+            🏙️ Все города
+        </a>
+    </div>
+</div>
+
+<!-- Session Info -->
+<div class="session-info mb-3">
+    <span class="session-item">
+        👁️ <strong class="ms-1">Визитов в сессии:</strong>&nbsp;@ViewBag.VisitCount
+    </span>
+    <span class="session-item">
+        🕐 <strong class="ms-1">Первый визит:</strong>&nbsp;@ViewBag.FirstVisit
+    </span>
+    <span class="session-item">
+        📅 <strong class="ms-1">Последний визит:</strong>&nbsp;@ViewBag.LastVisit
+    </span>
+</div>
+
+<!-- Filter and Sort Form -->
+<div class="filter-form">
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label mb-1">🔍 Фильтр по стране</label>
+            <input type="text" name="country" class="form-control" placeholder="Например: Россия"
+                   value="@ViewBag.FilterCountry" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label mb-1">📊 Сортировка</label>
+            @{
+                var currentSort = (string?)ViewBag.SortBy ?? "name";
+            }
+            <select name="sortBy" class="form-select">
+                @if (currentSort == "name")
+                { <option value="name" selected>По названию (А-Я)</option> }
+                else
+                { <option value="name">По названию (А-Я)</option> }
+                @if (currentSort == "name_desc")
+                { <option value="name_desc" selected>По названию (Я-А)</option> }
+                else
+                { <option value="name_desc">По названию (Я-А)</option> }
+                @if (currentSort == "country")
+                { <option value="country" selected>По стране</option> }
+                else
+                { <option value="country">По стране</option> }
+            </select>
+        </div>
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-primary">Применить</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary ms-1">Сбросить</a>
+        </div>
+    </form>
+</div>
+
+<!-- Stats Row -->
+<div class="row mb-3 g-3">
+    <div class="col-auto">
+        <span class="badge bg-primary fs-6 px-3 py-2">🏙️ Всего городов: @ViewBag.TotalCities</span>
+    </div>
+    @if (!string.IsNullOrEmpty(ViewBag.FilterCountry as string))
+    {
+        <div class="col-auto">
+            <span class="badge bg-info fs-6 px-3 py-2">Страна: @ViewBag.FilterCountry</span>
+        </div>
+    }
+</div>
+
+<!-- Cities Grid -->
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center py-4">
+        <div style="font-size:3rem;">🏙️</div>
+        <h5 class="mt-2">Города не найдены</h5>
+        <p class="mb-2 text-muted">Попробуйте изменить параметры фильтрации.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">Сбросить фильтр</a>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var city in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card city-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0 fw-bold">
+                                🏙️ @city.Name
+                            </h5>
+                            <span class="badge bg-secondary">@city.Country</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(city.Description))
+                        {
+                            <p class="card-text text-muted small mb-2">@city.Description</p>
+                        }
+                        <div class="small text-muted mb-3">
+                            <span class="me-3">📍 @city.Latitude°, @city.Longitude°</span>
+                        </div>
+                        @if (city.WeatherHistory.Any())
+                        {
+                            var latest = city.WeatherHistory.OrderByDescending(w => w.Date).First();
+                            <div class="weather-stat text-white" style="background:rgba(21,101,192,0.8); border-radius:8px; padding: 0.4rem 0.75rem; font-size:0.85rem;">
+                                🌡️ @latest.Temperature°C &nbsp;|&nbsp; 💧 @latest.Humidity%
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pt-0">
+                        <a asp-controller="Cities" asp-action="Details" asp-route-id="@city.Id"
+                           class="btn btn-outline-primary btn-sm w-100">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if ((int)ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-4" aria-label="Навигация по страницам">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @((int)ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Home" asp-action="Index"
+                       asp-route-page="@((int)ViewBag.CurrentPage - 1)"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-country="@ViewBag.FilterCountry">‹ Назад</a>
+                </li>
+                @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Home" asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-sortBy="@ViewBag.SortBy"
+                           asp-route-country="@ViewBag.FilterCountry">@i</a>
+                    </li>
+                }
+                <li class="page-item @((int)ViewBag.CurrentPage == (int)ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-controller="Home" asp-action="Index"
+                       asp-route-page="@((int)ViewBag.CurrentPage + 1)"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-country="@ViewBag.FilterCountry">Вперёд ›</a>
+                </li>
+            </ul>
+        </nav>
+        <p class="text-center text-muted small">
+            Страница @ViewBag.CurrentPage из @ViewBag.TotalPages
+        </p>
+    }
+}

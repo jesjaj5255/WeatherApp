@@ -1,0 +1,95 @@
+@model WeatherApp.Models.WeatherData
+@{
+    ViewData["Title"] = "Детали погоды";
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Главная</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Погода</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Запись #@Model.Id</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">🌦️ Данные о погоде — @(Model.City?.Name ?? "Неизвестный город")</h5>
+            </div>
+            <div class="card-body">
+                <!-- Weather Visual Block -->
+                <div class="weather-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="weather-temp @(Model.Temperature < 0 ? "cold" : Model.Temperature > 25 ? "hot" : "warm")">
+                                @Model.Temperature°
+                            </div>
+                            <div class="small text-white-50">Цельсий</div>
+                        </div>
+                        <div class="col">
+                            <h5 class="mb-1 text-white">@(Model.City?.Name ?? "—")</h5>
+                            <div>
+                                <span class="weather-stat">💧 @Model.Humidity%</span>
+                                <span class="weather-stat">💨 @Model.WindSpeed км/ч</span>
+                            </div>
+                            <div class="small text-white-50 mt-2">@Model.Description</div>
+                        </div>
+                    </div>
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Город:</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.City != null)
+                        {
+                            <a asp-controller="Cities" asp-action="Details" asp-route-id="@Model.CityId">
+                                @Model.City.Name (@Model.City.Country)
+                            </a>
+                        }
+                        else
+                        {
+                            <span>—</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">Температура:</dt>
+                    <dd class="col-sm-8"><strong>@Model.Temperature°C</strong></dd>
+                    <dt class="col-sm-4">Влажность:</dt>
+                    <dd class="col-sm-8">@Model.Humidity%</dd>
+                    <dt class="col-sm-4">Скорость ветра:</dt>
+                    <dd class="col-sm-8">@Model.WindSpeed км/ч</dd>
+                    <dt class="col-sm-4">Описание:</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
+                    <dt class="col-sm-4">Дата:</dt>
+                    <dd class="col-sm-8">@Model.Date.ToString("dd.MM.yyyy HH:mm")</dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex gap-2 flex-wrap">
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
+                            ✏️ Редактировать
+                        </a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-sm">
+                            🗑️ Удалить
+                        </a>
+                    }
+                    <a asp-action="Index" class="btn btn-outline-primary btn-sm">
+                        ← Ко всем записям
+                    </a>
+                    @if (Model.City != null)
+                    {
+                        <a asp-controller="Cities" asp-action="Details" asp-route-id="@Model.CityId"
+                           class="btn btn-outline-info btn-sm">
+                            🏙️ К городу
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

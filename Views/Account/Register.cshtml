@@ -1,0 +1,62 @@
+@model WeatherApp.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width:500px;">
+        <div class="auth-card-header">
+            <div style="font-size:3rem; margin-bottom:0.5rem;">✨</div>
+            <h2>Регистрация</h2>
+            <p class="mb-0 small" style="color:rgba(255,255,255,0.75);">Создайте аккаунт в WeatherApp</p>
+        </div>
+        <div class="auth-card-body">
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label">👤 Полное имя</label>
+                    <input asp-for="FullName" class="form-control" placeholder="Иванов Иван Иванович"
+                           autocomplete="name" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">📧 Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="your@email.com"
+                           autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">🔑 Пароль</label>
+                    <input asp-for="Password" class="form-control" placeholder="Минимум 6 символов"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label">🔑 Подтверждение пароля</label>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Повторите пароль"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 py-2">
+                    ✨ Зарегистрироваться
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    Уже есть аккаунт?
+                    <a asp-action="Login" class="fw-semibold">Войдите</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
