@@ -38,9 +38,9 @@ namespace WeatherApp.Data
 
             // Seed Cities
             modelBuilder.Entity<City>().HasData(
-                new City { Id = 1, Name = "Москва", Country = "Россия", Latitude = 55.7558m, Longitude = 37.6173m },
-                new City { Id = 2, Name = "Санкт-Петербург", Country = "Россия", Latitude = 59.9311m, Longitude = 30.3609m },
-                new City { Id = 3, Name = "Казань", Country = "Россия", Latitude = 55.1844m, Longitude = 48.4007m }
+                new City { Id = 1, Name = "Moscow", Country = "Russia", Latitude = 55.7558m, Longitude = 37.6173m, CreatedDate = new DateTime(2024, 1, 1) },
+                new City { Id = 2, Name = "London", Country = "UK", Latitude = 51.5074m, Longitude = -0.1278m, CreatedDate = new DateTime(2024, 1, 1) },
+                new City { Id = 3, Name = "New York", Country = "USA", Latitude = 40.7128m, Longitude = -74.0060m, CreatedDate = new DateTime(2024, 1, 1) }
             );
 
             // Relationships

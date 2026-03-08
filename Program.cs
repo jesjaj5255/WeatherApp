@@ -11,9 +11,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 
-// Add DbContext
+// Application-level state: global weather page visit counter
+builder.Services.AddSingleton<WeatherApp.Services.WeatherVisitCounter>();
+
+// Add DbContext with SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Identity with cookie authentication
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -63,7 +66,7 @@ using (var scope = app.Services.CreateScope())
 
         // Create admin user
         string adminEmail = "admin@weatherapp.com";
-        string adminPassword = "Admin123!";
+        string adminPassword = "Admin@123";
 
         if (await userManager.FindByEmailAsync(adminEmail) == null)
         {
@@ -72,7 +75,7 @@ using (var scope = app.Services.CreateScope())
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true,
-                FullName = "Администратор",
+                FullName = "Administrator",
                 RegistrationDate = DateTime.Now
             };
 
@@ -103,10 +106,6 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "admin",
-    pattern: "{controller=Admin}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

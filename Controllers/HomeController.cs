@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,38 +12,32 @@ namespace WeatherApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
+        private readonly UserManager<User> _userManager;
         private const string CITIES_CACHE_KEY = "cities_list";
-        private const int CACHE_DURATION_MINUTES = 60;
+        private const int CACHE_DURATION_MINUTES = 10;
 
-        public HomeController(ApplicationDbContext context, IMemoryCache cache)
+        public HomeController(ApplicationDbContext context, IMemoryCache cache, UserManager<User> userManager)
         {
             _context = context;
             _cache = cache;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string sortBy = "name", string? country = null, int page = 1)
         {
-            // ========== СЕССИИ ==========
-            if (HttpContext.Session.GetInt32("VisitCount") == null)
-            {
-                HttpContext.Session.SetInt32("VisitCount", 0);
-                HttpContext.Session.SetString("FirstVisit", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            }
-
+            // SESSION: track visit count
             var visitCount = HttpContext.Session.GetInt32("VisitCount") ?? 0;
             HttpContext.Session.SetInt32("VisitCount", visitCount + 1);
-            var firstVisit = HttpContext.Session.GetString("FirstVisit") ?? "Неизвестно";
+            if (HttpContext.Session.GetString("FirstVisit") == null)
+                HttpContext.Session.SetString("FirstVisit", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            var firstVisit = HttpContext.Session.GetString("FirstVisit") ?? "Unknown";
 
-            // ========== КУКИ ==========
+            // COOKIE: remember last visit time
             var lastView = Request.Cookies["LastVisit"];
             Response.Cookies.Append("LastVisit", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                new CookieOptions
-                {
-                    Expires = DateTimeOffset.UtcNow.AddDays(30),
-                    HttpOnly = true
-                });
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30), HttpOnly = true, Secure = true, SameSite = SameSiteMode.Lax });
 
-            // ========== CACHE ==========
+            // CACHE: cache city list for 10 minutes
             if (!_cache.TryGetValue(CITIES_CACHE_KEY, out List<City>? cachedCities))
             {
                 cachedCities = await _context.Cities.ToListAsync();
@@ -50,15 +46,11 @@ namespace WeatherApp.Controllers
 
             var citiesList = cachedCities ?? new List<City>();
 
-            // ========== ПРИМЕНЕНИЕ ФИЛЬТРА (Query String) ==========
+            // QUERY STRING: filter by country
             if (!string.IsNullOrEmpty(country))
-            {
-                citiesList = citiesList
-                    .Where(c => c.Country.Contains(country, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
+                citiesList = citiesList.Where(c => c.Country.Contains(country, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            // ========== СОРТИРОВКА (Query String) ==========
+            // QUERY STRING: sort
             citiesList = sortBy switch
             {
                 "country" => citiesList.OrderBy(c => c.Country).ToList(),
@@ -66,23 +58,17 @@ namespace WeatherApp.Controllers
                 _ => citiesList.OrderBy(c => c.Name).ToList()
             };
 
-            // ========== PAGINATION (Query String) ==========
-            const int pageSize = 3;
+            // QUERY STRING: pagination
+            const int pageSize = 6;
             var totalCount = citiesList.Count;
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
             if (page < 1) page = 1;
             if (page > totalPages && totalPages > 0) page = totalPages;
+            citiesList = citiesList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-            citiesList = citiesList
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            // ========== VIEWBAG (для передачи данных в View) ==========
             ViewBag.VisitCount = visitCount + 1;
             ViewBag.FirstVisit = firstVisit;
-            ViewBag.LastVisit = lastView ?? "Первый визит";
+            ViewBag.LastVisit = lastView ?? "First visit";
             ViewBag.SortBy = sortBy;
             ViewBag.FilterCountry = country ?? "";
             ViewBag.CurrentPage = page;
@@ -92,15 +78,28 @@ namespace WeatherApp.Controllers
             return View(citiesList);
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+            return View(user);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
         }
     }
 }
