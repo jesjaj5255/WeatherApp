@@ -1,0 +1,98 @@
+@model WeatherApp.Models.City
+
+@{
+    ViewData["Title"] = $"Прогноз для {Model.Name}";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h1>📍 @Model.Name, @Model.Country</h1>
+        <a asp-action="Index" class="btn btn-secondary">← Вернуться</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Информация о городе</h5>
+                <p><strong>Страна:</strong> @Model.Country</p>
+                <p><strong>Широта:</strong> @Model.Latitude</p>
+                <p><strong>Долгота:</strong> @Model.Longitude</p>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <p><strong>Описание:</strong> @Model.Description</p>
+                }
+                <p><strong>Дата создания:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Действия</h5>
+                    <a asp-controller="WeatherData" asp-action="Create" asp-route-cityId="@Model.Id" class="btn btn-success w-100 mb-2">
+                        ➕ Добавить прогноз
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning w-100 mb-2">
+                        ✏️ Редактировать
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>📊 История погоды</h3>
+
+        @if (!Model.WeatherHistory.Any())
+        {
+            <div class="alert alert-info">
+                Нет данных о погоде для этого города
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>📅 Дата</th>
+                            <th>🌡️ Температура</th>
+                            <th>💧 Влажность</th>
+                            <th>💨 Скорость ветра</th>
+                            <th>📝 Описание</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th>⚙️ Действия</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var weather in Model.WeatherHistory.OrderByDescending(w => w.Date))
+                        {
+                            <tr>
+                                <td>@weather.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                                <td><strong>@weather.Temperature°C</strong></td>
+                                <td>@weather.Humidity%</td>
+                                <td>@weather.WindSpeed км/ч</td>
+                                <td>@weather.Description</td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        <a asp-controller="WeatherData" asp-action="Edit" asp-route-id="@weather.Id" class="btn btn-sm btn-warning">✏️</a>
+                                        <a asp-controller="WeatherData" asp-action="Delete" asp-route-id="@weather.Id" class="btn btn-sm btn-danger">🗑️</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

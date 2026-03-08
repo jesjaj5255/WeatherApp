@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<IdentityRole>
+@{
+    ViewData["Title"] = "Управление ролями";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>🔐 Управление ролями</h2>
+        </div>
+        <div class="col-auto">
+            <a href="@Url.Action("Index")" class="btn btn-secondary">← Назад в админ-панель</a>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var role in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @if (role.Name == "Admin")
+                            {
+                                <span>👨‍💼 @role.Name</span>
+                            }
+                            else if (role.Name == "Manager")
+                            {
+                                <span>👤 @role.Name</span>
+                            }
+                            else
+                            {
+                                <span>🧑 @role.Name</span>
+                            }
+                        </h5>
+
+                        @{
+                            var descriptions = new Dictionary<string, string>
+                                        {
+                                        { "Admin", "Полный доступ ко всей системе, управление пользователями и ролями" },
+                                        { "Manager", "Может создавать, редактировать и удалять данные о погоде" },
+                                        { "User", "Доступ только для просмотра данных о погоде и городах" }
+                                        };
+                        }
+
+                        <p class="card-text text-muted">
+                            @(descriptions.ContainsKey(role.Name!) ? descriptions[role.Name!] : "Описание отсутствует")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

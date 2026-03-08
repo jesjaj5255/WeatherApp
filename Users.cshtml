@@ -1,0 +1,39 @@
+@model List<(WeatherApp.Models.User User, IList<string> Roles)>
+
+@{
+    ViewData["Title"] = "Управление пользователями";
+}
+
+<h2>👥 Пользователи</h2>
+
+<table class="table table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Email</th>
+            <th>Имя</th>
+            <th>Роли</th>
+            <th>Дата регистрации</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var (user, roles) in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.FullName</td>
+                <td>
+                    @foreach (var role in roles)
+                    {
+                        <span class="badge bg-info">@role</span>
+                    }
+                </td>
+                <td>@user.RegistrationDate.ToString("dd.MM.yyyy")</td>
+                <td>
+                    <a href="/Admin/EditUser?id=@user.Id" class="btn btn-sm btn-warning">✏️</a>
+                    <a href="/Admin/DeleteUser?id=@user.Id" class="btn btn-sm btn-danger">🗑️</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

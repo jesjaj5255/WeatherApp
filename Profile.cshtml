@@ -1,0 +1,42 @@
+﻿@model WeatherApp.Models.User
+
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Мой профиль</h2>
+            <hr>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Имя пользователя:</strong>
+                            <p>@Model.UserName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email:</strong>
+                            <p>@Model.Email</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Полное имя:</strong>
+                            <p>@Model.FullName</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Дата регистрации:</strong>
+                            <p>@Model.RegistrationDate.ToString("dd.MM.yyyy")</p>
+                        </div>
+                    </div>
+
+                    <a href="/Account/EditProfile" class="btn btn-warning">Редактировать</a>
+                    <a href="/" class="btn btn-secondary">На главную</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
