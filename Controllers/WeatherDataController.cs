@@ -36,7 +36,7 @@ namespace WeatherApp.Controllers
             if (!string.IsNullOrEmpty(viewMode))
             {
                 Response.Cookies.Append("ViewMode", viewMode,
-                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30) });
+                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30), Secure = true, SameSite = SameSiteMode.Lax });
             }
             else
             {
@@ -82,7 +82,7 @@ namespace WeatherApp.Controllers
             if (weatherData == null) return NotFound();
 
             Response.Cookies.Append("LastViewedWeatherId", id.ToString()!,
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30) });
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30), Secure = true, SameSite = SameSiteMode.Lax });
 
             return View(weatherData);
         }

@@ -35,7 +35,7 @@ namespace WeatherApp.Controllers
             // COOKIE: remember last visit time
             var lastView = Request.Cookies["LastVisit"];
             Response.Cookies.Append("LastVisit", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30), HttpOnly = true });
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(30), HttpOnly = true, Secure = true, SameSite = SameSiteMode.Lax });
 
             // CACHE: cache city list for 10 minutes
             if (!_cache.TryGetValue(CITIES_CACHE_KEY, out List<City>? cachedCities))
