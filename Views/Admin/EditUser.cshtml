@@ -45,7 +45,7 @@
                                    name="selectedRoles"
                                    value="@role.Name"
                                    id="role_@role.Id"
-                                   @(userRoles.Contains(role.Name!) ? "checked" : "") />
+                                   @(userRoles.Contains(role.Name ?? string.Empty) ? "checked" : "") />
                             <label class="form-check-label" for="role_@role.Id">
                                 @if (role.Name == "Admin")
                                 {
